@@ -1,0 +1,20 @@
+body {
+    background-color: rgb(31, 31, 31);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+}
+#canv {
+    background-color: rgb(42, 42, 42);
+    cursor: crosshair;
+    display: block;
+    margin: 0 auto;
+    margin-top: 80px;
+}
+#info {
+    position: absolute;
+    color: white;
+    margin-top: -70px;
+    margin-left: 10px;
+}

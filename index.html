@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" type="image/jpg" href="public/img/favicon.ico"/>
+    <title>Cloth</title>
+
+    <link rel="stylesheet" type="text/css" href="public/css/style.css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="public/js/index.js"></script>
+    <script src="public/js/classes.js"></script>
+    <script src="public/js/methods.js"></script>
+
+</head>
+<body onkeydown="keyPress(event)">
+
+    <p style="display: none;">events</p>
+
+    <div id="info">
+        Press <span style="color: rgb(218, 129, 221);">right mouse button</span> to start and stop time in simple mode <br/>
+        Press <span style="color: rgb(218, 129, 221);">shift</span> to enter and exit <span style="color:greenyellow">edit mode</span> <br/>
+        <span style="color:greenyellow">[Edit mode]</span> to delete node -> press <span style="color: rgb(218, 129, 221);">middle mouse button</span>
+    </div>
+
+    <canvas id="canv" width="1720px" height="780px"></canvas>
+
+</body>
+</html>
