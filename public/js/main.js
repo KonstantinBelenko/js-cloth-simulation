@@ -11,7 +11,8 @@ $(document).ready(()=> {
     var activePoint = -1;
     var deletePointsInterval;
     var mouseButtonDown = -1
-    
+    var img = document.getElementById("eggs");
+
     // PARAMETERS
     
     // physics
@@ -120,10 +121,12 @@ $(document).ready(()=> {
     }
     
     const drawPoint = (p) => {
+        
         ctx.beginPath();
-        ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = p.color;
-        ctx.fill();
+        ctx.drawImage(img, p.x, p.y);
+        // //ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
+        // ctx.fillStyle = p.color;
+        // ctx.fill();
         ctx.closePath();
     }
     

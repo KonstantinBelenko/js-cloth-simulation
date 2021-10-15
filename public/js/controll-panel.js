@@ -36,3 +36,13 @@ function createButton(e){
         window.create = 0;
     }
 }
+
+function loadPreset(e)
+{
+    let rows = $( "#preset-rows" ).val();
+    let columns = $( "#preset-columns" ).val();
+    if (rows && columns)
+    {
+        alert(rows + " " + columns)
+    }
+}

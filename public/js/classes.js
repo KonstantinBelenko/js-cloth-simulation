@@ -22,6 +22,6 @@ class stick{
         this.p1 = p1;
         this.length = distance(p0, p1);
         this.color = "white";
-        this.thickness = 2;
+        this.thickness = 0.1;
     }
 }
