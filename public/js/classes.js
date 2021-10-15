@@ -6,6 +6,7 @@ class point{
         this.oldy = this.y + initialY;
         this.color = "white";
         this.movable = true;
+        this.movesAfterCursor = false;
     }
 
     setPos(x, y) {

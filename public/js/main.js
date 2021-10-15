@@ -1,23 +1,28 @@
 $(document).ready(()=> {
 
-    document.addEventListener('contextmenu', event => event.preventDefault());
+    window.rows = 20;
+    window.columns = 46;
+    window.d = 25;
     
+    document.addEventListener('contextmenu', event => event.preventDefault());
     var canvas = document.getElementById("canv");
     var ctx = canvas.getContext('2d');
-    
     const rect = canvas.getBoundingClientRect();
     
     var connectingPoints = false;
     var activePoint = -1;
     var deletePointsInterval;
+    var deletingPoints = false;
+
+    var movingPoints = false;
+    var currentMovedPoint = -1;
+
     var mouseButtonDown = -1
     
-    // PARAMETERS
-    
     // physics
-    const bounce = 0.8;
-    const gravity = 0.8;
-    const friction = 0.980;
+    window.g = 0.9;
+    window.f = 0.99;
+    window.b = 0.8;
     
     // initial velocity
     const initialX = 0;
@@ -26,11 +31,17 @@ $(document).ready(()=> {
     // other
     const connectPointsAutomatically = false;
     const radius = 3;
+
+    var x;
+    var y;
+
+    window.drawPoints = true;
+    window.drawSticks = true;
     
     // PARAMETERS
     
-    const points = new Array();
-    const sticks = new Array();
+    var points = new Array();
+    var sticks = new Array();
     
     canvas.onmousedown = function(e){
     
@@ -54,8 +65,8 @@ $(document).ready(()=> {
                 }
             }
     
-            renderPoints();
-            renderSticks();
+            window.renderPoints();
+            window.renderSticks();
     
         }
         else if (e.button === 0){
@@ -92,16 +103,16 @@ $(document).ready(()=> {
                     activePoint = -1;
         
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    renderPoints();
-                    renderSticks();
+                    window.renderPoints();
+                    window.renderSticks();
         
                 }else{  // Fail connection
                     connectingPoints = false;
                     activePoint = -1;
         
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    renderPoints();
-                    renderSticks();
+                    window.renderPoints();
+                    window.renderSticks();
                 }
             }
     
@@ -112,19 +123,29 @@ $(document).ready(()=> {
     
     // Stop deleting points
     canvas.onmouseup = function(e){
-        if (e.button === 0)
+        if (e.button === 0 && deletingPoints)
         {
             clearInterval(deletePointsInterval);
             mouseButtonDown = -1;
+            deletingPoints = false;
+        }
+        else if (e.button === 0 && movingPoints)
+        {
+            mouseButtonDown = -1;
+            movingPoints = false;
+            points[currentMovedPoint].movesAfterCursor = false;
+            currentMovedPoint = -1;
         }
     }
     
     const drawPoint = (p) => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-        ctx.closePath();
+        if (window.drawPoints){
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            ctx.closePath();
+        }
     }
     
     const drawSingleStick = (s) => {
@@ -151,8 +172,8 @@ $(document).ready(()=> {
                 constrainPoints();
             }
         
-            renderPoints();
-            renderSticks();
+            window.renderPoints();
+            window.renderSticks();
         
             requestAnimationFrame(update);
     
@@ -161,17 +182,21 @@ $(document).ready(()=> {
     
     const updatePoints = () => {
         points.forEach(p => {
-            if (p.movable)
+            if (p.movable && !p.movesAfterCursor)
             {
-                let vx = (p.x - p.oldx) * friction;
-                let vy = (p.y - p.oldy)* friction;
+                let vx = (p.x - p.oldx) * window.f;
+                let vy = (p.y - p.oldy)* window.f;
         
                 p.oldx = p.x
                 p.oldy = p.y
         
                 p.x += vx;
                 p.y += vy;
-                p.y += gravity;
+                p.y += window.g;
+            }else if (p.movable && p.movesAfterCursor)
+            {
+                p.x = x;
+                p.y = y;
             }
         });
     }
@@ -180,28 +205,28 @@ $(document).ready(()=> {
         points.forEach(p => {
             if (p.movable)
             {
-                let vx = (p.x - p.oldx) * friction;
-                let vy = (p.y - p.oldy) * friction;
+                let vx = (p.x - p.oldx) * window.f;
+                let vy = (p.y - p.oldy) * window.f;
         
                 if(p.x > canvas.width){
                     p.x = canvas.width;
-                    p.oldx = p.x + vx * bounce;
+                    p.oldx = p.x + vx * window.b;
                 }
                 else if(p.x < 0)
                 {
                     p.x = 0; 
-                    p.oldx = p.x + vx * bounce;
+                    p.oldx = p.x + vx * window.b;
                 }
         
                 if(p.y > canvas.height)
                 {
                     p.y = canvas.height;
-                    p.oldy = p.y + vy * bounce;
+                    p.oldy = p.y + vy * window.b;
                 }
                 else if (p.y < 0)
                 {
                     p.y = 0;
-                    p.oldy = p.y + vy * bounce;
+                    p.oldy = p.y + vy * window.b;
                 }
             }
         })
@@ -233,36 +258,39 @@ $(document).ready(()=> {
         })
     }
     
-    const renderPoints = () => {
+    window.renderPoints = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         points.forEach(p =>{
             drawPoint(p)
         });
     }
     
-    const renderSticks = () => {
-        ctx.beginPath();
-        sticks.forEach(s => {
-            ctx.moveTo(s.p0.x, s.p0.y);
-            ctx.strokeStyle = s.color;
-            ctx.lineWidth = s.thickness;
-            ctx.lineTo(s.p1.x, s.p1.y);
-        })
-    
-        ctx.stroke();
+    window.renderSticks = () => {
+        if(window.drawSticks)
+        {
+            ctx.beginPath();
+            sticks.forEach(s => {
+                ctx.moveTo(s.p0.x, s.p0.y);
+                ctx.strokeStyle = s.color;
+                ctx.lineWidth = s.thickness;
+                ctx.lineTo(s.p1.x, s.p1.y);
+            })
+        
+            ctx.stroke();
+        }
     }
     
     canv.addEventListener('mousemove', function(e) {
     
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
     
         if (connectingPoints && activePoint != -1)
         {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            renderPoints();
-            renderSticks();
+            window.renderPoints();
+            window.renderSticks();
             drawSingleStick(new stick(points[activePoint], {x, y}))
             
         }
@@ -270,6 +298,7 @@ $(document).ready(()=> {
         // Deleting points
         if (window.create == 0 && mouseButtonDown === 0) // Delete points
         {
+            deletingPoints = true;
             var p = collision(x, y, points, radius+8);
             if (p != -1)
             {
@@ -286,39 +315,50 @@ $(document).ready(()=> {
                 }
                 
                 points.splice(p, 1);
-                renderPoints();
-                renderSticks();
+                window.renderPoints();
+                window.renderSticks();
             }
             p = -1;
+        // Moving points
+        }else if (window.create == 3 && mouseButtonDown === 0 && currentMovedPoint == -1){
+            movingPoints = true;
+            var p = collision(x, y, points, radius+8);
+            if (p != -1)
+            {
+                currentMovedPoint = p;
+                points[p].movesAfterCursor = true;
+            }
+            p=-1
         }
     });
     
     const shiftOut = document.querySelector('p');
     shiftOut.addEventListener('shiftOut', e=> {
-        renderSticks();
+        window.renderSticks();
     }, false);
     
-    const standartPreset = () => {
+    window.standartPreset = () => {
     
-        let startX = 400;
-        let startY = 100;
+        points = []
+        sticks = []
+
+        let startX = (canv.width/2)-(window.d*window.columns/2);
+        let startY = (canv.height/2)-(window.d*window.rows/2) ? (canv.height/2)-(window.d*window.rows/2) <= canv.height: canv.height;
         let immovablePointCounter = 0;
         let verticalOffset = 0;
-    
-        let columns = 46;
-        let rows = 20;
-        let d = 20;
-    
+
+        window.d =  parseInt(window.d);
+
         let dontTouchX = startX;
-        for(var i = 0; i < columns * rows; i++) {
+        for(var i = 0; i < window.columns * window.rows; i++) {
     
             // Start a new row each time
-            if (i % columns == 0){
-                startY += d
-                dontTouchX = startX
-                verticalOffset += columns;
+            if (i % window.columns == 0){
+                startY += window.d;
+                dontTouchX = startX;
+                verticalOffset += window.columns;
             }
-            dontTouchX += d;
+            dontTouchX += window.d;
     
             // Create new points
             points.push(
@@ -335,11 +375,11 @@ $(document).ready(()=> {
                 points[points.length - 1].movable = false;
                 points[points.length - 1].color = 'red';
             }
-            if (immovablePointCounter < columns)
+            if (immovablePointCounter < window.columns)
                 immovablePointCounter += 1;
     
             if (points.length > 1) {
-                if (i % columns != 0)
+                if (i % window.columns != 0)
                 {
                     sticks.push(new stick(
                         points[points.length - 1],
@@ -347,18 +387,18 @@ $(document).ready(()=> {
                         ))
                 }
     
-                if (i >= columns)
+                if (i >= window.columns)
                 {
                     sticks.push(new stick(
-                        points[i - columns],
+                        points[i - window.columns],
                         points[i]
                         ))
                 }
             }
         }
     
-        renderPoints();
-        renderSticks();
+        window.renderPoints();
+        window.renderSticks();
     }
     standartPreset();
     

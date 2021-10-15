@@ -35,5 +35,15 @@
 
 #panel-switch-load{
     background-color: #70A8EB; width: 6vw; height: 3.5vh;
-    display:flex; justify-content: center; align-items: center;
+    display: flex; justify-content: center; flex-direction: column;  
     cursor: pointer; }
+
+#panel-switch-gravity{
+    color: #FF5C5C; width: 6vw; height: 3.5vh;
+    display: flex; justify-content: center; align-items: center; flex-direction: column;  
+    cursor: pointer; }
+
+#panel-switch-checkbox{
+    color: #FF5C5C; width: 6vw; height: 3.5vh; font-size: 1vw;
+    display: flex; justify-content: center; align-items: center; 
+    cursor: pointer; }  
