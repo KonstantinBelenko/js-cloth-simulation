@@ -1,7 +1,8 @@
 # 🧵 js-cloth-simulation
 
 ✔ This is a simple js physics simulator for 2D cloth simulations. <br/>
-✔ It makes use of [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration) to achive proper physics behaviour.
+✔ It makes use of [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration) to achive proper physics behaviour. <br/>
+🏃‍♀️ Open **index.html** to run simulator in your browser of choice
 
 ## Controls
 
