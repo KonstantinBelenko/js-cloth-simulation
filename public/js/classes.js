@@ -6,6 +6,7 @@ class point{
         this.oldy = this.y + initialY;
         this.color = "white";
         this.movable = true;
+        this.movesAfterCursor = false;
     }
 
     setPos(x, y) {
@@ -22,6 +23,6 @@ class stick{
         this.p1 = p1;
         this.length = distance(p0, p1);
         this.color = "white";
-        this.thickness = 0.1;
+        this.thickness = 2;
     }
 }

@@ -20,7 +20,7 @@
 <body>
 
     <p style="display: none;">Event catcher</p>
-    <img style="display: none;" src="./public/img/egg.png" id="eggs">
+    <img style="display: none;" src="./public/img/octopuss.png" id="eggs">
     
     <canvas id="canv" width="1720px" height="780px"></canvas>
 
@@ -29,16 +29,38 @@
         <div class="panel-switch"> <div id='panel-switch-play'   class='noselect' onclick="playButton()"   >PLAY</div> </div>
         <div class="panel-switch"> <div id='panel-switch-create' class='noselect' onclick="createButton()" >CREATE</div> </div>
         <div class="panel-switch">
-             <div id='panel-switch-load'   class='noselect'>
-                <input type="number" placeholder="rows"     id="preset-rows"/>
-                <input type="number" placeholder="columns"  id="preset-columns"/>
+            <div id='panel-switch-load'   class='noselect'>
+                <input type="number" placeholder="rows"     value="20" id="preset-rows"/>
+                <input type="number" placeholder="columns"  value="46" id="preset-columns"/>
+                <input type="number" placeholder="distance" value="25" id="preset-distance"/>
                 <button style="background-color: #70A8EB; " onclick="loadPreset()">LOAD</button>
-             </div> 
+            </div>  
         </div>
-
-        <!-- Press <span style="color: rgb(218, 129, 221);">right mouse button</span> to start and stop time in simple mode <br/>
-        Press <span style="color: rgb(218, 129, 221);">shift</span> to enter and exit <span style="color:greenyellow">edit mode</span> <br/>
-        <span style="color:greenyellow">[Edit mode]</span> to delete node -> press <span style="color: rgb(218, 129, 221);">middle mouse button</span> -->
+        <div class="panel-switch"> <div id='panel-switch-gravity' class='noselect' >
+            GRAVITY
+            <input type="range" min="-10" max="10" step="0.01" value="0.9" oninput="gravity(this.value)">
+            <label id="gravity-label">0.9</label>
+        </div> </div>
+        <div class="panel-switch"> <div id='panel-switch-gravity' class='noselect' >
+            FRICTION
+            <input type="range" min="-3" max="3" step="0.01" value="0.99" oninput="friction(this.value)">
+            <label id="friction-label">0.99</label>
+        </div> </div>
+        <div class="panel-switch"> <div id='panel-switch-gravity' class='noselect' >
+            BOUNCE
+            <input type="range" min="-5" max="5" step="0.1" value="0.8" oninput="bounce(this.value)">
+            <label id="bounce-label">0.8</label>
+        </div> </div>
+        <div class="panel-switch"> 
+            <div id='panel-switch-checkbox' class='noselect' >
+                <label>Draw points: <input type="checkbox" checked onchange="changePoints()"></label>
+            </div>
+        </div>
+        <div class="panel-switch"> 
+            <div id='panel-switch-checkbox' class='noselect' >
+                <label>Draw sticks: <input type="checkbox" checked onchange="changeSticks()"></label>
+            </div>
+        </div>
     </div>
 
 
