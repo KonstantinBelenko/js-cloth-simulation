@@ -10,11 +10,15 @@ body {
     cursor: crosshair;
     display: block;
     margin: 0 auto;
-    margin-top: 80px;
+    margin-top: 4vh;
 }
-#info {
-    position: absolute;
-    color: white;
-    margin-top: -70px;
-    margin-left: 10px;
-}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
