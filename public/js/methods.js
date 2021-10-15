@@ -1,5 +1,5 @@
 // Can change active color to by anything
-const activeColor = "green";
+const activeColor = "blue";
 
 const passiveColor = "rgb(31, 31, 31)";
 var bgColor = passiveColor;
