@@ -7,7 +7,6 @@ $(document).ready(()=> {
     
     const rect = canvas.getBoundingClientRect();
     
-    
     var connectingPoints = false;
     var activePoint = -1;
     var deletePointsInterval;
@@ -60,9 +59,8 @@ $(document).ready(()=> {
     
         }
         else if (e.button === 0){
-    
             // Create point
-            if (window.create){
+            if (window.create == 1){
                 points.push(new point(x, y, initialX, initialY));
     
                 // Connect points with sticks automatically
@@ -77,36 +75,38 @@ $(document).ready(()=> {
                 }
                 drawPoint(points[points.length - 1]);
             }
+
+            // Connect points
+            if (window.create == 2)
+            {
+                let p = collision(x, y, points, radius);
+                if (!connectingPoints && p != -1) // START connection
+                {
+                    connectingPoints = true;
+                    activePoint = p;
+                }else if (connectingPoints && p != -1 && p != activePoint){ // End connection
+                        
+                    sticks.push(new stick(points[activePoint], points[p]));
+                        
+                    connectingPoints = false;
+                    activePoint = -1;
+        
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    renderPoints();
+                    renderSticks();
+        
+                }else{  // Fail connection
+                    connectingPoints = false;
+                    activePoint = -1;
+        
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    renderPoints();
+                    renderSticks();
+                }
+            }
     
             mouseButtonDown = 0;
     
-        }else if (mouseButtonDown == 1 && !window.play)
-        {
-            let p = collision(x, y, points, radius);
-            if (!connectingPoints && p != -1) // START connection
-            {
-                connectingPoints = true;
-                activePoint = p;
-            }else if (connectingPoints && p != -1 && p != activePoint){ // End connection
-                    
-                sticks.push(new stick(points[activePoint], points[p]));
-                    
-                connectingPoints = false;
-                activePoint = -1;
-    
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                renderPoints();
-                renderSticks();
-    
-            }else{  // Fail connection
-                connectingPoints = false;
-                activePoint = -1;
-    
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                renderPoints();
-                renderSticks();
-            }
-            return;
         }
     }
     
@@ -127,6 +127,20 @@ $(document).ready(()=> {
         ctx.closePath();
     }
     
+    const drawSingleStick = (s) => {
+        ctx.beginPath();
+        ctx.moveTo(s.p0.x, s.p0.y);
+
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = s.thickness;
+        
+        ctx.lineTo(s.p1.x, s.p1.y);
+        
+        ctx.stroke();
+        ctx.closePath();
+
+    }
+
     window.update = update = () => {
         if (window.play)
         {
@@ -243,16 +257,18 @@ $(document).ready(()=> {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
     
-        if (connectingPoints && activePoint != -1 && window.edit)
+        if (connectingPoints && activePoint != -1)
         {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
             renderPoints();
             renderSticks();
-            drawStick(new stick(points[activePoint], {x, y}))
+            drawSingleStick(new stick(points[activePoint], {x, y}))
+            
         }
     
         // Deleting points
-        if (!window.create && mouseButtonDown === 0) // Delete points
+        if (window.create == 0 && mouseButtonDown === 0) // Delete points
         {
             var p = collision(x, y, points, radius+8);
             if (p != -1)

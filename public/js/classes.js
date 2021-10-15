@@ -17,11 +17,11 @@ class point{
 }
 
 class stick{
-    constructor(p0, p1) {
+    constructor(p0, p1, color, thickness) {
         this.p0 = p0;
         this.p1 = p1;
         this.length = distance(p0, p1);
-        this.color = "red";
-        this.thickness = 6;
+        this.color = "white";
+        this.thickness = 2;
     }
 }
