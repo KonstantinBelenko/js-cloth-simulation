@@ -3,30 +3,16 @@ const activeColor = "green";
 
 const passiveColor = "rgb(31, 31, 31)";
 var bgColor = passiveColor;
-window.shifting = false;
-
-function keyPress(e){
-    if (e.keyCode === 16)
-    {
-        if (bgColor === passiveColor)
-        {
-            bgColor = activeColor;
-            window.shifting = true;
-        }else{
-            bgColor = passiveColor;
-            window.shifting = false;
-
-            const shiftOut = document.querySelector('p');
-            const shiftOutEvent = new Event('shiftOut');
-            shiftOut.dispatchEvent(shiftOutEvent);
-        }
-
-        document.body.style.backgroundColor = bgColor;
-    }
-}
 
 const getRandom = (range) => {
     return Math.random() < 0.5 ? Math.random() * -range : Math.random() * range;
+}
+
+const samePoint = (x1, y1, x2, y2) => {
+    if (x1 == x2 && y1 == y2)
+        return true
+    else
+        return false
 }
 
 const collision = (mouseX, mouseY, points, radius) => {
@@ -79,4 +65,10 @@ function handleMousemove(e, sticks, mouseX, mouseY) {
             ;
         }
     })
+}
+
+const distance = (p0, p1) => {
+    var dx = p1.x - p0.x
+    var dy = p1.y - p0.y
+    return Math.sqrt(dx * dx + dy * dy);
 }

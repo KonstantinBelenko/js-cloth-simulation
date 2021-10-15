@@ -17,15 +17,11 @@ class point{
 }
 
 class stick{
-    constructor(p0, p1, length) {
+    constructor(p0, p1) {
         this.p0 = p0;
         this.p1 = p1;
         this.length = distance(p0, p1);
+        this.color = "red";
+        this.thickness = 6;
     }
-}
-
-const distance = (p0, p1) => {
-    var dx = p1.x - p0.x
-    var dy = p1.y - p0.y
-    return Math.sqrt(dx * dx + dy * dy);
 }
